@@ -29,27 +29,4 @@ composer install
 
 You may alternatively need to run `php composer.phar install`, depending
 on how you installed Composer.
-
-**Start the built-in web server**
-
-You can use Nginx or Apache, but the built-in web server works
-great:
-
-```
-php bin/console server:run
-```
-
-Now check out the site at `http://localhost:8000`
-
-Have fun!
-
-## Have some Ideas or Feedback?
-
-And as always, thanks so much for your support and letting us do what
-we love!
-
-If you have suggestions or questions, please feel free to
-open an issue or message us.
-
-<3 Your friends at KnpUniversity
-# symfony_fundamentals
+Ce repo permet de suivre le 2e cours de KNP sur les fondamentaux de Symfony de la plateforme KNPUniversity
