@@ -12,7 +12,6 @@
       <parameter key="SecurityBundle">Symfony\Bundle\SecurityBundle\SecurityBundle</parameter>
       <parameter key="TwigBundle">Symfony\Bundle\TwigBundle\TwigBundle</parameter>
       <parameter key="MonologBundle">Symfony\Bundle\MonologBundle\MonologBundle</parameter>
-      <parameter key="SwiftmailerBundle">Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle</parameter>
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
       <parameter key="KnpMarkdownBundle">Knp\Bundle\MarkdownBundle\KnpMarkdownBundle</parameter>
@@ -30,12 +29,9 @@
     <parameter key="database_name">symfony</parameter>
     <parameter key="database_user">root</parameter>
     <parameter key="database_password">password</parameter>
-    <parameter key="mailer_transport">smtp</parameter>
-    <parameter key="mailer_host">127.0.0.1</parameter>
-    <parameter key="mailer_user">null</parameter>
-    <parameter key="mailer_password">null</parameter>
     <parameter key="secret">ThisTokenIsNotSoSecretChangeIt</parameter>
     <parameter key="locale">en</parameter>
+    <parameter key="cache_type">array</parameter>
     <parameter key="fragment.renderer.hinclude.global_template">null</parameter>
     <parameter key="fragment.path">/_fragment</parameter>
     <parameter key="kernel.secret">ThisTokenIsNotSoSecretChangeIt</parameter>
@@ -136,6 +132,7 @@
     <parameter key="monolog.use_microseconds">true</parameter>
     <parameter key="monolog.swift_mailer.handlers" type="collection"/>
     <parameter key="monolog.handlers_to_channels" type="collection">
+      <parameter key="monolog.handler.firephp">null</parameter>
       <parameter key="monolog.handler.console_very_verbose" type="collection">
         <parameter key="type">inclusive</parameter>
         <parameter key="elements" type="collection">
@@ -150,41 +147,6 @@
       </parameter>
       <parameter key="monolog.handler.main">null</parameter>
     </parameter>
-    <parameter key="swiftmailer.class">Swift_Mailer</parameter>
-    <parameter key="swiftmailer.transport.sendmail.class">Swift_Transport_SendmailTransport</parameter>
-    <parameter key="swiftmailer.transport.mail.class">Swift_Transport_MailTransport</parameter>
-    <parameter key="swiftmailer.transport.failover.class">Swift_Transport_FailoverTransport</parameter>
-    <parameter key="swiftmailer.plugin.redirecting.class">Swift_Plugins_RedirectingPlugin</parameter>
-    <parameter key="swiftmailer.plugin.impersonate.class">Swift_Plugins_ImpersonatePlugin</parameter>
-    <parameter key="swiftmailer.plugin.messagelogger.class">Swift_Plugins_MessageLogger</parameter>
-    <parameter key="swiftmailer.plugin.antiflood.class">Swift_Plugins_AntiFloodPlugin</parameter>
-    <parameter key="swiftmailer.transport.smtp.class">Swift_Transport_EsmtpTransport</parameter>
-    <parameter key="swiftmailer.plugin.blackhole.class">Swift_Plugins_BlackholePlugin</parameter>
-    <parameter key="swiftmailer.spool.file.class">Swift_FileSpool</parameter>
-    <parameter key="swiftmailer.spool.memory.class">Swift_MemorySpool</parameter>
-    <parameter key="swiftmailer.email_sender.listener.class">Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener</parameter>
-    <parameter key="swiftmailer.data_collector.class">Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.name">smtp</parameter>
-    <parameter key="swiftmailer.mailer.default.delivery.enabled">true</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.encryption">null</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.port">25</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.host">127.0.0.1</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.username">null</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.password">null</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.auth_mode">null</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.timeout">30</parameter>
-    <parameter key="swiftmailer.mailer.default.transport.smtp.source_ip">null</parameter>
-    <parameter key="swiftmailer.spool.default.memory.path">/home/zoe/site/aqua_note/var/cache/dev/swiftmailer/spool/default</parameter>
-    <parameter key="swiftmailer.mailer.default.spool.enabled">true</parameter>
-    <parameter key="swiftmailer.mailer.default.plugin.impersonate">null</parameter>
-    <parameter key="swiftmailer.mailer.default.single_address">null</parameter>
-    <parameter key="swiftmailer.spool.enabled">true</parameter>
-    <parameter key="swiftmailer.delivery.enabled">true</parameter>
-    <parameter key="swiftmailer.single_address">null</parameter>
-    <parameter key="swiftmailer.mailers" type="collection">
-      <parameter key="default">swiftmailer.mailer.default</parameter>
-    </parameter>
-    <parameter key="swiftmailer.default_mailer">default</parameter>
     <parameter key="doctrine_cache.apc.class">Doctrine\Common\Cache\ApcCache</parameter>
     <parameter key="doctrine_cache.apcu.class">Doctrine\Common\Cache\ApcuCache</parameter>
     <parameter key="doctrine_cache.array.class">Doctrine\Common\Cache\ArrayCache</parameter>
@@ -356,10 +318,6 @@
       <parameter key="data_collector.doctrine" type="collection">
         <parameter>db</parameter>
         <parameter>@Doctrine/Collector/db.html.twig</parameter>
-      </parameter>
-      <parameter key="swiftmailer.data_collector" type="collection">
-        <parameter>swiftmailer</parameter>
-        <parameter>@Swiftmailer/Collector/swiftmailer.html.twig</parameter>
       </parameter>
       <parameter key="data_collector.dump" type="collection">
         <parameter>dump</parameter>
@@ -1217,14 +1175,6 @@
         </argument>
       </call>
       <call method="add">
-        <argument type="service">
-          <service class="Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector" public="false">
-            <tag name="data_collector" template="@Swiftmailer/Collector/swiftmailer.html.twig" id="swiftmailer" priority="245"/>
-            <argument type="service" id="service_container"/>
-          </service>
-        </argument>
-      </call>
-      <call method="add">
         <argument type="service" id="data_collector.dump"/>
       </call>
       <call method="add">
@@ -1390,6 +1340,14 @@
         </argument>
         <argument>0</argument>
       </call>
+      <call method="addListenerService">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument>monolog.handler.firephp</argument>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
       <call method="addSubscriberService">
         <argument>response_listener</argument>
         <argument>Symfony\Component\HttpKernel\EventListener\ResponseListener</argument>
@@ -1459,10 +1417,6 @@
         <argument>Symfony\Bridge\Monolog\Handler\ConsoleHandler</argument>
       </call>
       <call method="addSubscriberService">
-        <argument>swiftmailer.email_sender.listener</argument>
-        <argument>Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener</argument>
-      </call>
-      <call method="addSubscriberService">
         <argument>sensio_framework_extra.controller.listener</argument>
         <argument>Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener</argument>
       </call>
@@ -1513,7 +1467,7 @@
       <argument type="collection">
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>57a37fcd430e36.27457989</argument>
+            <argument>57a49432168353.27041267</argument>
           </service>
         </argument>
       </argument>
@@ -1642,7 +1596,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>57a37fcd430e36.27457989</argument>
+            <argument>57a49432168353.27041267</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -1684,7 +1638,7 @@
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
         <argument key="number_format" type="collection">
-          <argument key="thousands_separator">.</argument>
+          <argument key="thousands_separator">,</argument>
           <argument key="decimals">0</argument>
           <argument key="decimal_point">.</argument>
         </argument>
@@ -1883,7 +1837,7 @@
           <argument>null</argument>
           <argument>0</argument>
           <argument>.</argument>
-          <argument>.</argument>
+          <argument>,</argument>
         </service>
       </configurator>
     </service>
@@ -1934,17 +1888,10 @@
         <argument key="32">300</argument>
       </argument>
     </service>
-    <service id="swiftmailer.email_sender.listener" class="Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener">
-      <tag name="kernel.event_subscriber"/>
-      <argument type="service" id="service_container"/>
-      <argument type="service" id="logger" on-invalid="null"/>
-    </service>
-    <service id="swiftmailer.mailer.default.transport.eventdispatcher" class="Swift_Events_SimpleEventDispatcher" public="false"/>
-    <service id="swiftmailer.mailer.default" class="Swift_Mailer">
-      <argument type="service" id="swiftmailer.mailer.default.transport"/>
-    </service>
-    <service id="swiftmailer.mailer.default.plugin.messagelogger" class="Swift_Plugins_MessageLogger">
-      <tag name="swiftmailer.default.plugin"/>
+    <service id="monolog.handler.firephp" class="Symfony\Bridge\Monolog\Handler\FirePHPHandler">
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
+      <argument>200</argument>
+      <argument>true</argument>
     </service>
     <service id="doctrine.dbal.connection_factory" class="Doctrine\Bundle\DoctrineBundle\ConnectionFactory">
       <argument type="collection"/>
@@ -2202,11 +2149,7 @@
       <tag name="templating.helper" alias="markdown"/>
       <argument type="service" id="markdown.parser.parser_manager"/>
     </service>
-    <service id="doctrine_cache.providers.my_markdown_cache" class="Doctrine\Common\Cache\FilesystemCache">
-      <argument>/tmp/doctrine_cache</argument>
-      <argument>null</argument>
-      <argument>2</argument>
-    </service>
+    <service id="doctrine_cache.providers.my_markdown_cache" class="Doctrine\Common\Cache\ArrayCache"/>
     <service id="data_collector.dump" class="Symfony\Component\HttpKernel\DataCollector\DumpDataCollector">
       <tag name="data_collector" id="dump" template="@Debug/Profiler/dump.html.twig" priority="240"/>
       <argument type="service" id="debug.stopwatch" on-invalid="ignore"/>
@@ -2285,10 +2228,6 @@
           <argument>db</argument>
           <argument>@Doctrine/Collector/db.html.twig</argument>
         </argument>
-        <argument key="swiftmailer.data_collector" type="collection">
-          <argument>swiftmailer</argument>
-          <argument>@Swiftmailer/Collector/swiftmailer.html.twig</argument>
-        </argument>
         <argument key="data_collector.dump" type="collection">
           <argument>dump</argument>
           <argument>@Debug/Profiler/dump.html.twig</argument>
@@ -2327,6 +2266,9 @@
     <service id="monolog.logger.request" class="Symfony\Bridge\Monolog\Logger">
       <argument>request</argument>
       <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
+      <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
       <call method="pushHandler">
@@ -2338,6 +2280,9 @@
     </service>
     <service id="monolog.logger.translation" class="Symfony\Bridge\Monolog\Logger">
       <argument>translation</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
       <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
@@ -2351,6 +2296,9 @@
     <service id="monolog.logger.templating" class="Symfony\Bridge\Monolog\Logger">
       <argument>templating</argument>
       <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
+      <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
       <call method="pushHandler">
@@ -2362,6 +2310,9 @@
     </service>
     <service id="monolog.logger.profiler" class="Symfony\Bridge\Monolog\Logger">
       <argument>profiler</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
       <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
@@ -2375,6 +2326,9 @@
     <service id="monolog.logger.router" class="Symfony\Bridge\Monolog\Logger">
       <argument>router</argument>
       <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
+      <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
       <call method="pushHandler">
@@ -2386,6 +2340,9 @@
     </service>
     <service id="monolog.logger.php" class="Symfony\Bridge\Monolog\Logger">
       <argument>php</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
       <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
@@ -2399,6 +2356,9 @@
     <service id="monolog.logger.event" class="Symfony\Bridge\Monolog\Logger">
       <argument>event</argument>
       <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
+      <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
       <call method="pushHandler">
@@ -2411,6 +2371,9 @@
     <service id="monolog.logger.security" class="Symfony\Bridge\Monolog\Logger">
       <argument>security</argument>
       <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
+      <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
       <call method="pushHandler">
@@ -2422,6 +2385,9 @@
     </service>
     <service id="monolog.logger.doctrine" class="Symfony\Bridge\Monolog\Logger">
       <argument>doctrine</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
       <call method="pushHandler">
         <argument type="service" id="monolog.handler.console_very_verbose"/>
       </call>
@@ -2507,10 +2473,6 @@
         <argument>Twig</argument>
       </call>
       <call method="addPath">
-        <argument>/home/zoe/site/aqua_note/vendor/symfony/swiftmailer-bundle/Resources/views</argument>
-        <argument>Swiftmailer</argument>
-      </call>
-      <call method="addPath">
         <argument>/home/zoe/site/aqua_note/vendor/doctrine/doctrine-bundle/Resources/views</argument>
         <argument>Doctrine</argument>
       </call>
@@ -2535,6 +2497,9 @@
         <argument>true</argument>
       </call>
       <call method="pushHandler">
+        <argument type="service" id="monolog.handler.firephp"/>
+      </call>
+      <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
       <call method="pushHandler">
@@ -2545,76 +2510,11 @@
       </call>
       <autowiring-type>Psr\Log\LoggerInterface</autowiring-type>
     </service>
-    <service id="swiftmailer.mailer.default.transport" class="Swift_Transport_SpoolTransport">
-      <argument type="service" id="swiftmailer.mailer.default.transport.eventdispatcher"/>
-      <argument type="service" id="swiftmailer.mailer.default.spool"/>
-      <call method="registerPlugin">
-        <argument type="service" id="swiftmailer.mailer.default.plugin.messagelogger"/>
-      </call>
-    </service>
-    <service id="swiftmailer.mailer.default.spool" class="Swift_MemorySpool"/>
-    <service id="swiftmailer.mailer.default.transport.real" class="Swift_Transport_EsmtpTransport">
-      <argument type="service">
-        <service class="Swift_Transport_StreamBuffer" public="false">
-          <argument type="service">
-            <service class="Swift_StreamFilters_StringReplacementFilterFactory" public="false"/>
-          </argument>
-        </service>
-      </argument>
-      <argument type="collection">
-        <argument type="service">
-          <service class="Swift_Transport_Esmtp_AuthHandler" public="false">
-            <argument type="collection">
-              <argument type="service">
-                <service class="Swift_Transport_Esmtp_Auth_CramMd5Authenticator" public="false"/>
-              </argument>
-              <argument type="service">
-                <service class="Swift_Transport_Esmtp_Auth_LoginAuthenticator" public="false"/>
-              </argument>
-              <argument type="service">
-                <service class="Swift_Transport_Esmtp_Auth_PlainAuthenticator" public="false"/>
-              </argument>
-            </argument>
-            <call method="setUsername">
-              <argument>null</argument>
-            </call>
-            <call method="setPassword">
-              <argument>null</argument>
-            </call>
-            <call method="setAuthMode">
-              <argument>null</argument>
-            </call>
-          </service>
-        </argument>
-      </argument>
-      <argument type="service" id="swiftmailer.mailer.default.transport.eventdispatcher"/>
-      <call method="setHost">
-        <argument>127.0.0.1</argument>
-      </call>
-      <call method="setPort">
-        <argument>25</argument>
-      </call>
-      <call method="setEncryption">
-        <argument>null</argument>
-      </call>
-      <call method="setTimeout">
-        <argument>30</argument>
-      </call>
-      <call method="setSourceIp">
-        <argument>null</argument>
-      </call>
-    </service>
     <service id="markdown.parser" class="Knp\Bundle\MarkdownBundle\Parser\Preset\Max">
       <tag name="markdown.parser" alias="max"/>
     </service>
     <service id="session.storage" alias="session.storage.native"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher"/>
-    <service id="swiftmailer.spool" alias="swiftmailer.mailer.default.spool"/>
-    <service id="swiftmailer.transport.real" alias="swiftmailer.mailer.default.transport.real"/>
-    <service id="swiftmailer.plugin.messagelogger" alias="swiftmailer.mailer.default.plugin.messagelogger"/>
-    <service id="swiftmailer.mailer" alias="swiftmailer.mailer.default"/>
-    <service id="swiftmailer.transport" alias="swiftmailer.mailer.default.transport"/>
-    <service id="mailer" alias="swiftmailer.mailer.default"/>
     <service id="database_connection" alias="doctrine.dbal.default_connection"/>
     <service id="doctrine.orm.entity_manager" alias="doctrine.orm.default_entity_manager"/>
     <service id="doctrine.orm.default_metadata_cache" alias="doctrine_cache.providers.doctrine.orm.default_metadata_cache"/>
